@@ -47,7 +47,7 @@ const createInitialState = () => ({
       name: ''
     }
   ],
-  activities: Array(15).fill().map(() => ({
+  activities: Array(7).fill().map(() => ({
     city: '',
     name: '',
     type: '',

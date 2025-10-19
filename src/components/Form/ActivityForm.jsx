@@ -22,7 +22,7 @@ const ActivityForm = ({ data, errors, updateArrayData, addArrayItem, removeArray
   }
 
   const removeActivity = (index) => {
-    if (data.activities.length > 3) {
+    if (data.activities.length > 7) {
       removeArrayItem('activities', index)
     }
   }
@@ -38,7 +38,7 @@ const ActivityForm = ({ data, errors, updateArrayData, addArrayItem, removeArray
           <div key={index} className="border border-border-gray rounded-lg p-4 bg-bg-off-white">
             <div className="flex items-center justify-between mb-4">
               <h4 className="font-medium text-purple-dark">Activity {index + 1}</h4>
-              {data.activities.length > 3 && (
+              {data.activities.length > 7 && (
                 <Button
                   variant="danger"
                   onClick={() => removeActivity(index)}
@@ -114,7 +114,7 @@ const ActivityForm = ({ data, errors, updateArrayData, addArrayItem, removeArray
           Total Activities: {data.activities.filter(a => a.name).length} / {data.activities.length}
         </p>
         <p className="text-xs text-text-medium mt-1">
-          Minimum 15 activities recommended for complete itinerary
+          You can add more activities as needed. Minimum 7 activities recommended.
         </p>
       </div>
     </div>

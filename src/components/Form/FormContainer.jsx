@@ -48,7 +48,7 @@ const FormContainer = ({
 
   // Use the validation from hooks
   const validateFormForPDF = () => {
-    // For PDF generation, we'll be more lenient - just check if basic required fields are filled
+    // Basic required fields check
     const hasCustomerData = formData.customer.name && formData.customer.destination
     const hasDaysData = formData.days.length > 0 && formData.days[0].title
     const hasCompanyData = formData.company.name && formData.company.email
@@ -66,6 +66,58 @@ const FormContainer = ({
     if (!hasCompanyData) {
       alert('Please fill in company details')
       return false
+    }
+
+    // Date validation
+    const validateDateOrder = (date1, date2, errorMsg) => {
+      if (date1 && date2) {
+        const [day1, month1, year1] = date1.split('/').map(Number)
+        const [day2, month2, year2] = date2.split('/').map(Number)
+        const d1 = new Date(year1, month1 - 1, day1)
+        const d2 = new Date(year2, month2 - 1, day2)
+        
+        if (d2 <= d1) {
+          alert(errorMsg)
+          return false
+        }
+      }
+      return true
+    }
+
+    // Check trip dates
+    if (!validateDateOrder(
+      formData.customer.departureDate, 
+      formData.customer.arrivalDate, 
+      'Arrival date must be after departure date'
+    )) {
+      return false
+    }
+
+    // Check hotel dates
+    for (let i = 0; i < formData.hotels.length; i++) {
+      const hotel = formData.hotels[i]
+      if (hotel.checkIn && hotel.checkOut) {
+        if (!validateDateOrder(
+          hotel.checkIn, 
+          hotel.checkOut, 
+          `Hotel ${i + 1}: Check-out date must be after check-in date`
+        )) {
+          return false
+        }
+      }
+    }
+
+    // Check day dates are in sequence
+    const dayDates = formData.days.filter(day => day.date).map(day => {
+      const [day1, month1, year1] = day.date.split('/').map(Number)
+      return { date: new Date(year1, month1 - 1, day1), dayNumber: day.dayNumber }
+    }).sort((a, b) => a.dayNumber - b.dayNumber)
+
+    for (let i = 1; i < dayDates.length; i++) {
+      if (dayDates[i].date <= dayDates[i-1].date) {
+        alert(`Day ${dayDates[i].dayNumber} date should be after Day ${dayDates[i-1].dayNumber} date`)
+        return false
+      }
     }
     
     return true
