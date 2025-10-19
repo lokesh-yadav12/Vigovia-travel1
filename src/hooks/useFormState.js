@@ -67,6 +67,25 @@ const createInitialState = () => ({
     validity: '',
     processingDate: ''
   },
+  importantNotes: [
+    { point: 'Airlines Standard Policy', details: 'In Case Of Visa Rejection, Visa Fees Or Any Other Non Cancellable Component Cannot Be Reimbursed At Any Cost.' },
+    { point: 'Flight/Hotel Cancellation', details: 'In Case Of Visa Rejection, Visa Fees Or Any Other Non Cancellable Component Cannot Be Reimbursed At Any Cost.' },
+    { point: 'Trip Insurance', details: 'In Case Of Visa Rejection, Visa Fees Or Any Other Non Cancellable Component Cannot Be Reimbursed At Any Cost.' },
+    { point: 'Hotel Check-in & Check Out', details: 'In Case Of Visa Rejection, Visa Fees Or Any Other Non Cancellable Component Cannot Be Reimbursed At Any Cost.' },
+    { point: 'Visa Rejection', details: 'In Case Of Visa Rejection, Visa Fees Or Any Other Non Cancellable Component Cannot Be Reimbursed At Any Cost.' }
+  ],
+  scopeOfService: [
+    { service: 'Flight Tickets And Hotel Vouchers', details: 'Delivered 3 Days Post Full Payment' },
+    { service: 'Web Check-In', details: 'Boarding Pass Delivery Via Email/WhatsApp' },
+    { service: 'Support', details: 'Chat Support - Response Time: 4 Hours' },
+    { service: 'Cancellation Support', details: 'Provided' },
+    { service: 'Trip Support', details: 'Response Time: 5 Minutes' }
+  ],
+  inclusionSummary: [
+    { category: 'Flight', count: 2, details: 'All Flights Mentioned', status: 'Awaiting Confirmation' },
+    { category: 'Tourist Tax', count: 2, details: 'Yotel (Singapore), Oakwood (Sydney), Mercure (Cairns), Novotel (Gold Coast), Holiday Inn (Melbourne)', status: 'Awaiting Confirmation' },
+    { category: 'Hotel', count: 2, details: 'Airport To Hotel - Hotel To Attractions - Day Trips If Any', status: 'Included' }
+  ],
   company: { ...DEFAULT_COMPANY_INFO }
 })
 
@@ -109,6 +128,12 @@ export const useFormState = (initialData = null) => {
   const updateArrayData = useCallback((section, index, field, value) => {
     setFormData(prev => {
       const newData = { ...prev }
+      
+      // Ensure the section exists and is an array
+      if (!Array.isArray(prev[section])) {
+        return newData
+      }
+      
       const newArray = [...prev[section]]
       
       if (newArray[index]) {
@@ -177,15 +202,20 @@ export const useFormState = (initialData = null) => {
     setFormData(prev => {
       const newData = { ...prev }
       
+      // Ensure the section exists and is an array
+      if (!Array.isArray(prev[section])) {
+        newData[section] = []
+      }
+      
       // Special handling for days to auto-increment day numbers
       if (section === 'days') {
         const newDay = {
           ...newItem,
-          dayNumber: prev.days.length + 1
+          dayNumber: (prev[section]?.length || 0) + 1
         }
-        newData[section] = [...prev[section], newDay]
+        newData[section] = [...(prev[section] || []), newDay]
       } else {
-        newData[section] = [...prev[section], newItem]
+        newData[section] = [...(prev[section] || []), newItem]
       }
 
       return newData
@@ -197,6 +227,12 @@ export const useFormState = (initialData = null) => {
   const removeArrayItem = useCallback((section, index) => {
     setFormData(prev => {
       const newData = { ...prev }
+      
+      // Ensure the section exists and is an array
+      if (!Array.isArray(prev[section])) {
+        return newData
+      }
+      
       const newArray = prev[section].filter((_, i) => i !== index)
       
       // Special handling for days to renumber

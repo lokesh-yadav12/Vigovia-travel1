@@ -184,6 +184,9 @@ const ItineraryPDF = ({ formData }) => {
   const payment = formData?.payment || {}
   const visa = formData?.visa || {}
   const company = formData?.company || {}
+  const importantNotes = formData?.importantNotes || []
+  const scopeOfService = formData?.scopeOfService || []
+  const inclusionSummary = formData?.inclusionSummary || []
 
   return (
     <Document>
@@ -428,7 +431,122 @@ const ItineraryPDF = ({ formData }) => {
         </View>
       </Page>
 
-      {/* PAGE 3: Activities + Payment + Visa */}
+      {/* PAGE 3: Important Notes + Scope + Inclusion */}
+      <Page size="A4" style={styles.page}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.logo}>vigovia ✈️</Text>
+            <Text style={styles.tagline}>PLAN.PACK.GO!</Text>
+          </View>
+        </View>
+
+        {/* Important Notes */}
+        {importantNotes.length > 0 && (
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.sectionTitle}>
+              Important <Text style={styles.sectionTitleAccent}>Notes</Text>
+            </Text>
+            
+            {/* Table Header */}
+            <View style={styles.tableHeader}>
+              <Text style={[styles.tableHeaderText, { flex: 1.5 }]}>Point</Text>
+              <Text style={[styles.tableHeaderText, { flex: 2.5 }]}>Details</Text>
+            </View>
+            
+            {/* Table Rows */}
+            {importantNotes.map((note, index) => (
+              <View key={index} style={[
+                styles.tableRow,
+                { backgroundColor: index % 2 === 0 ? '#F5F0FF' : '#FFFFFF' }
+              ]}>
+                <Text style={[styles.tableCell, { flex: 1.5, fontWeight: 'bold' }]}>{note.point}</Text>
+                <Text style={[styles.tableCellLeft, { flex: 2.5 }]}>{note.details}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Scope of Service */}
+        {scopeOfService.length > 0 && (
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.sectionTitle}>
+              Scope Of <Text style={styles.sectionTitleAccent}>Service</Text>
+            </Text>
+            
+            {/* Table Header */}
+            <View style={styles.tableHeader}>
+              <Text style={[styles.tableHeaderText, { flex: 1.5 }]}>Service</Text>
+              <Text style={[styles.tableHeaderText, { flex: 2.5 }]}>Details</Text>
+            </View>
+            
+            {/* Table Rows */}
+            {scopeOfService.map((scope, index) => (
+              <View key={index} style={[
+                styles.tableRow,
+                { backgroundColor: index % 2 === 0 ? '#F5F0FF' : '#FFFFFF' }
+              ]}>
+                <Text style={[styles.tableCell, { flex: 1.5, fontWeight: 'bold' }]}>{scope.service}</Text>
+                <Text style={[styles.tableCellLeft, { flex: 2.5 }]}>{scope.details}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Inclusion Summary */}
+        {inclusionSummary.length > 0 && (
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.sectionTitle}>
+              Inclusion <Text style={styles.sectionTitleAccent}>Summary</Text>
+            </Text>
+            
+            {/* Table Header */}
+            <View style={styles.tableHeader}>
+              <Text style={[styles.tableHeaderText, { flex: 1 }]}>Category</Text>
+              <Text style={[styles.tableHeaderText, { flex: 0.8 }]}>Count</Text>
+              <Text style={[styles.tableHeaderText, { flex: 2 }]}>Details</Text>
+              <Text style={[styles.tableHeaderText, { flex: 1.2 }]}>Status/Comments</Text>
+            </View>
+            
+            {/* Table Rows */}
+            {inclusionSummary.map((inclusion, index) => (
+              <View key={index} style={[
+                styles.tableRow,
+                { backgroundColor: index % 2 === 0 ? '#F5F0FF' : '#FFFFFF' }
+              ]}>
+                <Text style={[styles.tableCell, { flex: 1 }]}>{inclusion.category}</Text>
+                <Text style={[styles.tableCell, { flex: 0.8 }]}>{inclusion.count}</Text>
+                <Text style={[styles.tableCellLeft, { flex: 2 }]}>{inclusion.details}</Text>
+                <Text style={[styles.tableCell, { flex: 1.2 }]}>{inclusion.status}</Text>
+              </View>
+            ))}
+            
+            <View style={{ marginTop: 10 }}>
+              <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#333333', marginBottom: 2 }}>Transfer Policy(Refundable Upon Claim)</Text>
+              <Text style={{ fontSize: 8, fontStyle: 'italic', color: '#666666' }}>*Hotel Transfers & Sightseeing Expenses Under Customers May Book Air Ticket/Hotel And Claim A Refund For That Specific Leg</Text>
+            </View>
+          </View>
+        )}
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <View style={styles.footerLeft}>
+            <Text style={styles.companyName}>{company.name || 'Vigovia Tech Pvt. Ltd'}</Text>
+            <Text style={styles.footerText}>{company.address || 'Company Address'}</Text>
+          </View>
+          <View style={styles.footerRight}>
+            <Text style={styles.footerText}>Phone: {company.phone || '+91-9504061112'}</Text>
+            <Text style={styles.footerText}>Email: {company.email || 'email@company.com'}</Text>
+            <Text style={styles.footerText}>CIN: {company.cin || 'CIN Number'}</Text>
+            <View style={{ marginTop: 8, alignItems: 'flex-end' }}>
+              <Text style={[styles.logo, { fontSize: 14 }]}>vigovia ✈️</Text>
+              <Text style={styles.tagline}>PLAN.PACK.GO!</Text>
+            </View>
+          </View>
+        </View>
+      </Page>
+
+      {/* PAGE 4: Activities + Terms */}
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
@@ -440,17 +558,17 @@ const ItineraryPDF = ({ formData }) => {
 
         {/* Activity Table */}
         {activities.filter(a => a.name).length > 0 && (
-          <View style={{ marginBottom: 25 }}>
+          <View style={{ marginBottom: 20 }}>
             <Text style={styles.sectionTitle}>
               Activity <Text style={styles.sectionTitleAccent}>Table</Text>
             </Text>
             
             {/* Table Header */}
             <View style={styles.tableHeader}>
-              <Text style={[styles.tableHeaderText, { flex: 2 }]}>City</Text>
-              <Text style={[styles.tableHeaderText, { flex: 4.5 }]}>Activity</Text>
-              <Text style={[styles.tableHeaderText, { flex: 2 }]}>Type</Text>
-              <Text style={[styles.tableHeaderText, { flex: 1.5 }]}>Time Required</Text>
+              <Text style={[styles.tableHeaderText, { flex: 1 }]}>City</Text>
+              <Text style={[styles.tableHeaderText, { flex: 2 }]}>Activity</Text>
+              <Text style={[styles.tableHeaderText, { flex: 1 }]}>Type</Text>
+              <Text style={[styles.tableHeaderText, { flex: 1 }]}>Time</Text>
             </View>
             
             {/* Table Rows */}
@@ -459,112 +577,129 @@ const ItineraryPDF = ({ formData }) => {
                 styles.tableRow,
                 { backgroundColor: index % 2 === 0 ? '#F5F0FF' : '#FFFFFF' }
               ]}>
-                <Text style={[styles.tableCell, { flex: 2 }]}>{activity.city}</Text>
-                <Text style={[styles.tableCellLeft, { flex: 4.5 }]}>{activity.name}</Text>
-                <Text style={[styles.tableCell, { flex: 2 }]}>{activity.type}</Text>
-                <Text style={[styles.tableCell, { flex: 1.5 }]}>{activity.time}</Text>
+                <Text style={[styles.tableCell, { flex: 1 }]}>{activity.city || '-'}</Text>
+                <Text style={[styles.tableCellLeft, { flex: 2 }]}>{activity.name || '-'}</Text>
+                <Text style={[styles.tableCell, { flex: 1 }]}>{activity.type || '-'}</Text>
+                <Text style={[styles.tableCell, { flex: 1 }]}>{activity.time || '-'}</Text>
               </View>
             ))}
           </View>
         )}
 
+        {/* Terms and Conditions */}
+        <View style={{ marginTop: 30 }}>
+          <Text style={styles.sectionTitle}>
+            Terms and <Text style={styles.sectionTitleAccent}>Conditions</Text>
+          </Text>
+          <Text style={{ fontSize: 11, color: '#2B7DE9', textDecoration: 'underline', marginTop: 12 }}>
+            View all terms and conditions
+          </Text>
+        </View>
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <View style={styles.footerLeft}>
+            <Text style={styles.companyName}>{company.name || 'Vigovia Tech Pvt. Ltd'}</Text>
+            <Text style={styles.footerText}>{company.address || 'Company Address'}</Text>
+          </View>
+          <View style={styles.footerRight}>
+            <Text style={styles.footerText}>Phone: {company.phone || '+91-9504061112'}</Text>
+            <Text style={styles.footerText}>Email: {company.email || 'email@company.com'}</Text>
+            <Text style={styles.footerText}>CIN: {company.cin || 'CIN Number'}</Text>
+            <View style={{ marginTop: 8, alignItems: 'flex-end' }}>
+              <Text style={[styles.logo, { fontSize: 14 }]}>vigovia ✈️</Text>
+              <Text style={styles.tagline}>PLAN.PACK.GO!</Text>
+            </View>
+          </View>
+        </View>
+      </Page>
+
+      {/* PAGE 5: Payment + Visa + CTA */}
+      <Page size="A4" style={styles.page}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.logo}>vigovia ✈️</Text>
+            <Text style={styles.tagline}>PLAN.PACK.GO!</Text>
+          </View>
+        </View>
+
         {/* Payment Plan */}
-        {payment.totalAmount > 0 && (
-          <View style={{ marginBottom: 25 }}>
-            <Text style={styles.sectionTitle}>
-              Payment <Text style={styles.sectionTitleAccent}>Plan</Text>
+        <View style={{ marginBottom: 30 }}>
+          <Text style={styles.sectionTitle}>
+            Payment <Text style={styles.sectionTitleAccent}>Plan</Text>
+          </Text>
+          
+          <View style={{ marginTop: 15 }}>
+            <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#333333', marginBottom: 10 }}>
+              Total Amount: ₹{payment.totalAmount?.toLocaleString('en-IN') || '0'}
+            </Text>
+            <Text style={{ fontSize: 10, color: '#666666', marginBottom: 15 }}>
+              TCS: {payment.tcs || 'Not Collected'} | PAX: {payment.pax || 0}
             </Text>
             
-            {/* Total Amount */}
-            <View style={{ 
-              flexDirection: 'row', 
-              backgroundColor: '#F5F0FF', 
-              padding: 12,
-              marginBottom: 10,
-              borderRadius: 8
-            }}>
-              <Text style={{ fontSize: 10, fontWeight: 'bold', flex: 1, textAlign: 'center' }}>Total Amount</Text>
-              <Text style={{ fontSize: 11, fontWeight: 'bold', flex: 2, textAlign: 'center' }}>
-                ₹ {payment.totalAmount?.toLocaleString('en-IN')} For {payment.pax} Pax (Inclusive Of GST)
-              </Text>
-            </View>
-
-            {/* TCS Status */}
-            <View style={{ 
-              flexDirection: 'row', 
-              backgroundColor: '#F5F0FF', 
-              padding: 12,
-              marginBottom: 15,
-              borderRadius: 8
-            }}>
-              <Text style={{ fontSize: 10, fontWeight: 'bold', flex: 1, textAlign: 'center' }}>TCS</Text>
-              <Text style={{ fontSize: 10, flex: 2, textAlign: 'center' }}>{payment.tcs}</Text>
-            </View>
-
-            {/* Installments Table */}
+            {/* Installment Table */}
             <View style={styles.tableHeader}>
               <Text style={[styles.tableHeaderText, { flex: 1 }]}>Installment</Text>
               <Text style={[styles.tableHeaderText, { flex: 1 }]}>Amount</Text>
-              <Text style={[styles.tableHeaderText, { flex: 2 }]}>Due Date</Text>
+              <Text style={[styles.tableHeaderText, { flex: 1.5 }]}>Due Date</Text>
             </View>
             
-            {payment.installments && payment.installments.map((installment, index) => (
+            {payment.installments?.map((installment, index) => (
               <View key={index} style={[
                 styles.tableRow,
                 { backgroundColor: index % 2 === 0 ? '#F5F0FF' : '#FFFFFF' }
               ]}>
                 <Text style={[styles.tableCell, { flex: 1 }]}>Installment {index + 1}</Text>
-                <Text style={[styles.tableCell, { flex: 1, fontWeight: 'bold' }]}>
-                  {typeof installment.amount === 'number' ? `₹${installment.amount.toLocaleString('en-IN')}` : installment.amount}
+                <Text style={[styles.tableCell, { flex: 1 }]}>
+                  {typeof installment.amount === 'number' 
+                    ? `₹${installment.amount.toLocaleString('en-IN')}` 
+                    : installment.amount}
                 </Text>
-                <Text style={[styles.tableCell, { flex: 2 }]}>{installment.dueDate}</Text>
+                <Text style={[styles.tableCell, { flex: 1.5 }]}>{installment.dueDate}</Text>
               </View>
             ))}
           </View>
-        )}
+        </View>
 
         {/* Visa Details */}
         {(visa.type || visa.validity || visa.processingDate) && (
-          <View style={{ marginBottom: 25 }}>
+          <View style={{ marginBottom: 30 }}>
             <Text style={styles.sectionTitle}>
               Visa <Text style={styles.sectionTitleAccent}>Details</Text>
             </Text>
             
-            <View style={{ 
-              flexDirection: 'row', 
-              backgroundColor: '#FFFFFF', 
-              border: '1px solid #E0D0E8',
-              padding: 15,
-              borderRadius: 8
-            }}>
-              <View style={{ flex: 1, alignItems: 'center' }}>
-                <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#666666', marginBottom: 4 }}>Visa Type :</Text>
-                <Text style={{ fontSize: 10, color: '#333333' }}>{visa.type || 'N/A'}</Text>
+            <View style={{ flexDirection: 'row', marginTop: 15, gap: 20 }}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#333333' }}>Type:</Text>
+                <Text style={{ fontSize: 9, color: '#666666' }}>{visa.type || 'Not specified'}</Text>
               </View>
-              <View style={{ flex: 1, alignItems: 'center' }}>
-                <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#666666', marginBottom: 4 }}>Validity:</Text>
-                <Text style={{ fontSize: 10, color: '#333333' }}>{visa.validity || 'N/A'}</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#333333' }}>Validity:</Text>
+                <Text style={{ fontSize: 9, color: '#666666' }}>{visa.validity || 'Not specified'}</Text>
               </View>
-              <View style={{ flex: 1, alignItems: 'center' }}>
-                <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#666666', marginBottom: 4 }}>Processing Date :</Text>
-                <Text style={{ fontSize: 10, color: '#333333' }}>{visa.processingDate || 'N/A'}</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#333333' }}>Processing Date:</Text>
+                <Text style={{ fontSize: 9, color: '#666666' }}>{visa.processingDate || 'Not specified'}</Text>
               </View>
             </View>
           </View>
         )}
 
         {/* Call to Action */}
-        <View style={{ alignItems: 'center', marginTop: 20, marginBottom: 80 }}>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#5B3A99', marginBottom: 15, letterSpacing: 2 }}>
+        <View style={{ marginTop: 40, alignItems: 'center' }}>
+          <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#5B3A99', marginBottom: 15 }}>
             PLAN.PACK.GO!
           </Text>
-          <View style={{ 
-            backgroundColor: '#5B3A99', 
-            borderRadius: 25, 
-            paddingVertical: 12, 
-            paddingHorizontal: 40
+          <View style={{
+            backgroundColor: '#5B3A99',
+            paddingHorizontal: 30,
+            paddingVertical: 12,
+            borderRadius: 25
           }}>
-            <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF' }}>Book Now</Text>
+            <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' }}>
+              Book Now
+            </Text>
           </View>
         </View>
 
@@ -590,37 +725,33 @@ const ItineraryPDF = ({ formData }) => {
 }
 
 const PDFGenerator = ({ formData, isGenerating }) => {
-  const fileName = `${formData?.customer?.name || 'Customer'}_${formData?.customer?.destination || 'Destination'}_Itinerary.pdf`
-
-  if (isGenerating) {
-    return (
-      <div className="text-center p-4">
-        <div className="inline-flex items-center px-4 py-2 bg-purple-lighter rounded-lg">
-          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-purple-medium" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span className="text-purple-dark">Generating PDF...</span>
-        </div>
-      </div>
-    )
-  }
+  if (!formData) return null
 
   return (
-    <div className="text-center p-4">
-      <PDFDownloadLink
-        document={<ItineraryPDF formData={formData} />}
-        fileName={fileName}
-        className="inline-flex items-center px-6 py-3 bg-purple-medium hover:bg-purple-dark text-white font-semibold rounded-lg transition-colors"
-      >
-        {({ blob, url, loading, error }) => {
-          if (error) {
-            console.error('PDF Error:', error)
-            return 'Error generating PDF - Check console'
+    <div className="mt-8">
+      {isGenerating && (
+        <div className="text-center">
+          <div className="inline-flex items-center px-4 py-2 bg-purple-lighter text-purple-dark rounded-lg">
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Generating PDF...
+          </div>
+        </div>
+      )}
+      
+      <div className="text-center">
+        <PDFDownloadLink
+          document={<ItineraryPDF formData={formData} />}
+          fileName={`${formData.customer?.name || 'Customer'}_${formData.customer?.destination || 'Destination'}_Itinerary.pdf`}
+          className="inline-flex items-center px-6 py-3 bg-purple-medium hover:bg-purple-dark text-white font-semibold rounded-lg transition-colors"
+        >
+          {({ blob, url, loading, error }) =>
+            loading ? 'Generating PDF...' : 'Download PDF'
           }
-          return loading ? 'Preparing PDF...' : 'Download PDF'
-        }}
-      </PDFDownloadLink>
+        </PDFDownloadLink>
+      </div>
     </div>
   )
 }

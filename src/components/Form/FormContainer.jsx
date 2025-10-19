@@ -4,6 +4,7 @@ import DayItinerary from './DayItinerary'
 import FlightForm from './FlightForm'
 import HotelForm from './HotelForm'
 import ActivityForm from './ActivityForm'
+import NotesAndScopeForm from './NotesAndScopeForm'
 import PaymentForm from './PaymentForm'
 import VisaForm from './VisaForm'
 import Button from '../UI/Button'
@@ -43,6 +44,7 @@ const FormContainer = ({
     { title: 'Flight Information', component: FlightForm },
     { title: 'Hotel Bookings', component: HotelForm },
     { title: 'Activities', component: ActivityForm },
+    { title: 'Notes & Scope', component: NotesAndScopeForm },
     { title: 'Payment & Visa', component: PaymentForm }
   ]
 
